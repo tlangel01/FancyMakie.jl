@@ -8,4 +8,4 @@ Prerequisite: CairoMakie.jl & LaTeXStrings.jl
 
 - Start Julia
 
-- '] dev path/to/FancyMakie'
+- `] dev path/to/FancyMakie`
