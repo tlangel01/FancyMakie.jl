@@ -66,6 +66,18 @@ const ax_theme_map = Theme(Axis = (
 const cb_theme = Theme(Colorbar = (vertical=true, flipaxis=true))
 const heatmap_theme = merge(fg_theme, ax_theme_map)
 
+
+"""
+    set_custom_theme!(theme::Symbol)
+
+Sets the global Makie theme to the defined theme of this package.
+
+# Available themes:
+- `:plot`: for creating usuals 2D plots
+- `:heatmap`: specifically for heatmap-plots where the axis-ticks should not go inside the axis
+
+If function is calles without theme it defaults to `:plot`.
+"""
 function set_custom_theme!(theme::Symbol=:plot)
     if theme === :plot
         custom_theme = plot_theme
@@ -125,18 +137,88 @@ function set_custom_theme!(theme::Symbol=:plot)
     end
 end
 
+"""
+    mm2pt(x,y)
+
+Calculates the size a figure needs to result in desired mm.
+
+# Examples
+```julia-repl
+julia> mm2pt(160,120)
+(453.5433070866142, 340.15748031496065)
+
+julia> figure = Figure(size=mm2pt(160,120), fontsize=12)
+...
+julia> save("output.pdf", figure, pt_per_unit=1)
+# saves a vector graphic of width 16 cm, height 12 cm and fontsize 12
+```
+"""
 mm2pt(x,y) = (x,y) ./ 25.4 .* 72 # mm -> inches -> pt
+
+"""
+    comma(str::String)
+
+Replaces all points in a string with commas
+
+# Examples
+```julia-relp
+julia> comma("12.3")
+"12,3"
+
+julia> using FancyData, Measurements
+julia> value = 98.76 ± 0.54
+julia> str = mes(value)
+"98.8(5)"
+julia> comma(str)
+"98,8(5)"
+```
+"""
 comma(str)=replace(str,'.'=>',')
-wbox(ax,limits)=poly!(ax,Point2f[(limits[1],limits[3]),(limits[2],limits[3]),(limits[2],limits[4]),(limits[1],limits[4])],
-space=:relative,color=:white,strokewidth=0.6,strokecolor=:black,linestyle=:solid)
+
+"""
+    wbox(ax, limits)
+
+Plots white box in axis `ax`.
+Limits are given as an array similar to axis.limits but in relative space.
+
+# Examples
+```julia-repl
+julia> wbox(axis, [0.1, 0.2, 0.1, 0.2])
+# small box in the bottom left corner
+
+julia> wbox(axis, [0.5, 1.0, 0.5, 1.0])
+# large box taking up the right top quadrant
+```
+"""
+function wbox(ax,limits)
+    poly!(ax,Point2f[(limits[1],limits[3]),
+                     (limits[2],limits[3]),
+                     (limits[2],limits[4]),
+                     (limits[1],limits[4])],
+        space=:relative,
+        color=:white,
+        strokewidth=0.6,
+        strokecolor=:black,
+        linestyle=:solid
+    )
+end
 
 """
     cross()
 
-optional argument:
+Can be used as a substitute for `:cross` as a marker.
+
+# (Optional) Arguments:
 - `length`: default=1
 - `width`: default=1
-- `rotation`: default=0
+- `rotation`: default=0, given in radians
+
+# Examples
+```julia-repl
+julia> scatter!(x_values, y_values, marker=cross())
+
+julia> scatterlines!(x_values, y_values, marker=cross(rotation=pi/4))
+```
 """
 function cross(;length=1,width=1,rotation=0)
     l=0.5length
