@@ -1,21 +1,23 @@
+"""
+# FancyMakie.jl
+
+Basic utilities for plotting with CairoMakie
+
+## Exported functions
+    
+    set_custom_theme!()
+
+    mm2pt(x,y)
+
+    comma(str)
+
+    wbox(axis, limits)
+
+    cross()
+
+"""
 module FancyMakie
 __precompile__()
-
-function help()
-    println("""
-    FancyMakie.jl — Fancy config for Makie
-    ------------------------------------------------------------------------------
-
-    Core measurement utilities:
-      • set_custom_theme!()    – Optional arguments are :plot and :heatmap
-      • mm2pt(x,y)             – Calculates pointsize from mm
-      • comma(String)          – Reformats periods to commas
-      • wbox(ax,limits)        – White box with limits as [←,→,↓,↑]
-      • cross()                – markerelement with optional args: length, width, rotation
-      
-    """)
-    return nothing
-end
 
 using CairoMakie, LaTeXStrings
 
@@ -31,8 +33,8 @@ const ax_theme = Theme(Axis = (
     yminortickalign = 1,
     xminorticksize = 2.5,
     yminorticksize = 2.5,
-    xticksmirrored=true,
-    yticksmirrored=true,
+    xticksmirrored = true,
+    yticksmirrored = true,
     xminorticksvisible = true,
     yminorticksvisible = true,
     xgridvisible = false,
