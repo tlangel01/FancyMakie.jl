@@ -1,6 +1,6 @@
 name = "FancyMakie"
 uuid = "aa8846d6-bb89-4e5c-8db1-9add4ad434f9"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["28tob "]
 
 [deps]

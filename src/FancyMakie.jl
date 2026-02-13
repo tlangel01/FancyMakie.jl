@@ -78,7 +78,7 @@ Sets the global Makie theme to the defined theme of this package.
 - `:plot`: for creating usuals 2D plots
 - `:heatmap`: specifically for heatmap-plots where the axis-ticks should not go inside the axis
 
-If function is calles without theme it defaults to `:plot`.
+If function is called without theme it defaults to `:plot`.
 """
 function set_custom_theme!(theme::Symbol=:plot)
     if theme === :plot
@@ -91,29 +91,29 @@ function set_custom_theme!(theme::Symbol=:plot)
     @eval Makie begin # make line and Marker elements of uniform size
         set_theme!(merge($custom_theme, theme_latexfonts()))
         function legendelements(plot::Lines, legend)
-            return LineElement(
+            return [LineElement(
                 color = plot.color[],
                 linewidth = 1,
                 linestyle = plot.linestyle[],
                 points = [Point2f(0, 0.5), Point2f(1, 0.5)]
-            )
+            )]
         end
         
         function legendelements(plot::Stairs, legend)
-            return LineElement(
+            return [LineElement(
                 color = plot.color[],
                 linewidth = 1,
                 linestyle = plot.linestyle[],
                 points = [Point2f(0, 0.5), Point2f(1, 0.5)]
-            )
+           )]   
         end
         
         function legendelements(plot::Scatter, legend)
-            return MarkerElement(
+            return [MarkerElement(
                 color = plot.color[],
                 marker = plot.marker,
                 markersize = 5
-            )
+            )]
         end
         
         # make legendelement for errorbars actually errorbars (courtesy of ChatGPT)
@@ -130,11 +130,11 @@ function set_custom_theme!(theme::Symbol=:plot)
             # Shift all points so the glyph is centered at (0.5,0.5)
             points .= points .+ Point2f(0.5, 0.5)
         
-            return LineElement(
+            return [LineElement(
                 color = plot.color[],
                 linewidth = 1,
                 points = points,
-            )
+               )]
         end
     end
 end
