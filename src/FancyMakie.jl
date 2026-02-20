@@ -82,41 +82,47 @@ If function is called without theme it defaults to `:plot`.
 """
 function set_custom_theme!(theme::Symbol=:plot)
     if theme === :plot
-        custom_theme = plot_theme
+        custom_theme = FancyMakie.plot_theme
     elseif theme === :heatmap
-        custom_theme = heatmap_theme
+        custom_theme = FancyMakie.heatmap_theme
     else
         error(":$theme not defined; try :plot or :heatmap")
     end
     @eval Makie begin # make line and Marker elements of uniform size
         set_theme!(merge($custom_theme, theme_latexfonts()))
-        function legendelements(plot::Lines, legend)
-            return [LineElement(
-                color = plot.color[],
-                linewidth = 1,
-                linestyle = plot.linestyle[],
-                points = [Point2f(0, 0.5), Point2f(1, 0.5)]
-            )]
-        end
         
-        function legendelements(plot::Stairs, legend)
-            return [LineElement(
-                color = plot.color[],
-                linewidth = 1,
-                linestyle = plot.linestyle[],
-                points = [Point2f(0, 0.5), Point2f(1, 0.5)]
-           )]   
+        function legendelements(plot::Union{Lines, LineSegments}, legend)
+            ls = plot.linestyle[]
+            return LegendElement[
+                LineElement(
+                    plots = plot,
+                    color = extract_color(plot, legend[:linecolor]),
+                    linestyle = choose_scalar(ls isa Vector ? Linestyle(ls) : ls, legend[:linestyle]),
+                    linewidth = 1,#choose_scalar(plot.linewidth, legend[:linewidth]),
+                    colormap = plot.colormap,
+                    colorrange = plot.colorrange,
+                    alpha = plot.alpha
+                ),
+            ]
         end
-        
+
         function legendelements(plot::Scatter, legend)
-            return [MarkerElement(
-                color = plot.color[],
-                marker = plot.marker,
-                markersize = 5
-            )]
+            return LegendElement[
+                MarkerElement(
+                    plots = plot,
+                    color = extract_color(plot, legend[:markercolor]),
+                    marker = choose_scalar(plot.marker, legend[:marker]),
+                    markersize = 5,#choose_scalar(plot.markersize, legend[:markersize]),
+                    strokewidth = choose_scalar(plot.strokewidth, legend[:markerstrokewidth]),
+                    strokecolor = choose_scalar(plot.strokecolor, legend[:markerstrokecolor]),
+                    colormap = plot.colormap,
+                    colorrange = plot.colorrange,
+                    alpha = plot.alpha,
+                ),
+            ]
         end
         
-        # make legendelement for errorbars actually errorbars (courtesy of ChatGPT)
+        # make legendelement for errorbars actually errorbars
         function legendelements(plot::Errorbars, legend)
             w = 1.0   # horizontal bar length
             h = 0.2   # whisker height
@@ -131,9 +137,13 @@ function set_custom_theme!(theme::Symbol=:plot)
             points .= points .+ Point2f(0.5, 0.5)
         
             return [LineElement(
-                color = plot.color[],
-                linewidth = 1,
-                points = points,
+                plots = plot,
+                color = extract_color(plot, legend[:linecolor]),
+                linewidth = 1,#choose_scalar(plot.linewidth, legend[:linewidth]),
+                colormap = plot.colormap,
+                colorrange = plot.colorrange,
+                alpha = plot.alpha,
+                points = points
                )]
         end
     end
