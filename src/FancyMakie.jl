@@ -23,93 +23,21 @@ __precompile__()
 
 using CairoMakie, LaTeXStrings, MathTeXEngine
 
-const fg_theme = Theme(size = (453.54,340.15), fontsize = 12)
-const ax_theme = Theme(Axis = (
-    xminorticks = IntervalsBetween(2),
-    yminorticks = IntervalsBetween(2),
-    xtickalign = 1,
-    ytickalign = 1,
-    xticksize = 4,
-    yticksize = 4,
-    xminortickalign = 1,
-    yminortickalign = 1,
-    xminorticksize = 2.5,
-    yminorticksize = 2.5,
-    xticksmirrored = true,
-    yticksmirrored = true,
-    xminorticksvisible = true,
-    yminorticksvisible = true,
-    xgridvisible = false,
-    ygridvisible = false,
-    xminorgridvisible = false,
-    yminorgridvisible = false
-))
-const lb_theme = Theme(Label = (valign = :top, halign = :left, padding = (5,5,5,5)))
-const eb_theme = Theme(Errorbars = (whiskerwidth = 5, linewidth = 1))
-const lg_theme = Theme(Legend = (position = :rt, margin = (1,1,1,1), framevisible=false, rowgap=-5, merge=true))
-const plot_theme = merge(fg_theme, ax_theme, lg_theme, eb_theme, lb_theme)
-
-const ax_theme_map = Theme(Axis = (   
-    xminorticks = IntervalsBetween(2),
-    yminorticks = IntervalsBetween(2),
-    xtickalign = 0,
-    ytickalign = 0,
-    xticksize = 4,
-    yticksize = 4,
-    xminortickalign = 0,
-    yminortickalign = 0,
-    xminorticksize = 2.5,
-    yminorticksize = 2.5,
-    xminorticksvisible = true,
-    yminorticksvisible = true,
-    xgridvisible = false,
-    ygridvisible = false,
-    xminorgridvisible = false,
-    yminorgridvisible = false
-))
-const cb_theme = Theme(Colorbar = (vertical=true, flipaxis=true))
-const heatmap_theme = merge(fg_theme, ax_theme_map)
+include("themes.jl")
+include("consts.jl")
 
 function theme_utopiafonts()
     utopia_theme = Theme(
-        font = joinpath(@__DIR__, "fonts", "Erewhon-Regular.otf"),
+        font = joinpath(@__DIR__, "..", "fonts", "Erewhon-Regular.otf"),
         fonts = (;
-            regular     = joinpath(@__DIR__, "fonts", "Erewhon-Regular.otf"),
-            bold        = joinpath(@__DIR__, "fonts", "Erewhon-Bold.otf"),
-            italic      = joinpath(@__DIR__, "fonts", "Erewhon-Italic.otf"),
-            bold_italic = joinpath(@__DIR__, "fonts", "Erewhon-BoldItalic.otf"),
+            regular     = joinpath(@__DIR__, "..", "fonts", "Erewhon-Regular.otf"),
+            bold        = joinpath(@__DIR__, "..", "fonts", "Erewhon-Bold.otf"),
+            italic      = joinpath(@__DIR__, "..", "fonts", "Erewhon-Italic.otf"),
+            bold_italic = joinpath(@__DIR__, "..", "fonts", "Erewhon-BoldItalic.otf"),
         ),
     )
     return utopia_theme
 end
-
-const latex_string_replacements = [
-    "\\alpha"      => "\\textit{\\alpha}",      "\\otheralpha"      => "\\text{\\alpha}",
-    "\\beta"       => "\\textit{\\beta}",       "\\otherbeta"       => "\\text{\\beta}",
-    "\\gamma"      => "\\textit{\\gamma}",      "\\othergamma"      => "\\text{\\gamma}",      "\\Gamma"          => "\\textit{\\Gamma}",      "\\otherGamma"      => "\\text{\\Gamma}",
-    "\\delta"      => "\\textit{\\delta}",      "\\otherdelta"      => "\\text{\\delta}",      "\\Delta"          => "\\textit{\\Delta}",      "\\otherDelta"      => "\\text{\\Delta}",
-    "\\epsilon"    => "\\textit{\\epsilon}",    "\\otherepsilon"    => "\\text{\\epsilon}",    "\\varepsilon"     => "\\textit{\\varepsilon}", "\\othervarepsilon" => "\\text{\\varepsilon}",
-    "\\zeta"       => "\\textit{\\zeta}",       "\\otherzeta"       => "\\text{\\zeta}",
-    "\\eta"        => "\\textit{\\eta}",        "\\othereta"        => "\\text{\\eta}",
-    "\\theta"      => "\\textit{\\theta}",      "\\othertheta"      => "\\text{\\theta}",      "\\vartheta"       => "\\textit{\\vartheta}",   "\\othervartheta"   => "\\text{\\vartheta}",   "\\Theta" => "\\textit{\\Theta}", "\\otherTheta" => "\\text{\\Theta}",
-    "\\iota"       => "\\textit{\\iota}",       "\\otheriota"       => "\\text{\\iota}",
-    "\\kappa"      => "\\textit{\\kappa}",      "\\otherkappa"      => "\\text{\\kappa}",      "\\varkappa"       => "\\textit{\\varkappa}",   "\\othervarkappa"   => "\\text{\\varkappa}",
-    "\\lambda"     => "\\textit{\\lambda}",     "\\otherlambda"     => "\\text{\\lambda}",     "\\Lambda"         => "\\textit{\\Lambda}",     "\\otherLambda"     => "\\text{\\Lambda}",
-    "\\mu"         => "\\textit{\\mu}",         "\\othermu"         => "\\text{\\mu}",
-    "\\nu"         => "\\textit{\\nu}",         "\\othernu"         => "\\text{\\nu}",
-    "\\xi"         => "\\textit{\\xi}",         "\\otherxi"         => "\\text{\\xi}",         "\\Xi"             => "\\textit{\\Xi}",         "\\otherXi"         => "\\text{\\Xi}",
-    "\\pi"         => "\\textit{\\pi}",         "\\otherpi"         => "\\text{\\pi}",         "\\varpi"          => "\\textit{\\varpi}",      "\\othervarpi"      => "\\text{\\varpi}",      "\\Pi"    => "\\textit{\\Pi}",    "\\otherPi"    => "\\text{\\Pi}",
-    "\\rho"        => "\\textit{\\rho}",        "\\otherrho"        => "\\text{\\rho}",        "\\varrho"         => "\\textit{\\varrho}",     "\\othervarrho"     => "\\text{\\varrho}",
-    "\\sigma"      => "\\textit{\\sigma}",      "\\othersigma"      => "\\text{\\sigma}",      "\\varsigma"       => "\\textit{\\varsigma}",   "\\othervarsigma"   => "\\text{\\varsigma}",   "\\Sigma" => "\\textit{\\Sigma}", "\\otherSigma" => "\\text{\\Sigma}",
-    "\\tau"        => "\\textit{\\tau}",        "\\othertau"        => "\\text{\\tau}",
-    "\\upsilon"    => "\\textit{\\upsilon}",    "\\otherupsilon"    => "\\text{\\upsilon}",    "\\Upsilon"        => "\\textit{\\Upsilon}",    "\\otherUpsilon"    => "\\text{\\Upsilon}",
-    "\\phi"        => "\\textit{\\phi}",        "\\otherphi"        => "\\text{\\phi}",        "\\varphi"         => "\\textit{\\varphi}",     "\\othervarphi"     => "\\text{\\varphi}",     "\\Phi"   => "\\textit{\\Phi}",   "\\otherPhi"   => "\\text{\\Phi}",
-    "\\chi"        => "\\textit{\\chi}",        "\\otherchi"        => "\\text{\\chi}",
-    "\\psi"        => "\\textit{\\psi}",        "\\otherpsi"        => "\\text{\\psi}",        "\\Psi"            => "\\textit{\\Psi}",        "\\otherPsi"        => "\\text{\\Psi}",
-    "\\omega"      => "\\textit{\\omega}",      "\\otheromega"      => "\\text{\\omega}",      "\\Omega"          => "\\textit{\\Omega}",      "\\otherOmega"      => "\\text{\\Omega}",
-
-    "+" => "\\textit{+}", "-" => "\\textit{-}", "\\pm" => "\\textit{\\pm}", "=" => "\\textit{=}", "\\times" => "\\textit{\\times}", "\\div" => "\\textit{\\div}", "°" => "\\textit{°}" 
-]
 
 # Helper function for [see below]
 function change_latex_string(lat_str::LaTeXString)
@@ -180,11 +108,11 @@ function set_custom_theme!(theme::Symbol=:plot; font::Symbol=:latex)
         set_theme!(merge(custom_theme, theme_latexfonts()))
     elseif font === :utopia
         MathTeXEngine.set_texfont_family!(
-            regular    = joinpath(@__DIR__, "fonts", "Erewhon-Regular.otf"),
-            bold       = joinpath(@__DIR__, "fonts", "Erewhon-Bold.otf"),
-            italic     = joinpath(@__DIR__, "fonts", "Erewhon-Italic.otf"),
-            bolditalic = joinpath(@__DIR__, "fonts", "Erewhon-BoldItalic.otf"),
-            math       = joinpath(@__DIR__, "fonts", "Erewhon-Math.otf")
+            regular    = joinpath(@__DIR__, "..", "fonts", "Erewhon-Regular.otf"),
+            bold       = joinpath(@__DIR__, "..", "fonts", "Erewhon-Bold.otf"),
+            italic     = joinpath(@__DIR__, "..", "fonts", "Erewhon-Italic.otf"),
+            bolditalic = joinpath(@__DIR__, "..", "fonts", "Erewhon-BoldItalic.otf"),
+            math       = joinpath(@__DIR__, "..", "fonts", "Erewhon-Math.otf")
         )
         set_theme!(merge(custom_theme, theme_utopiafonts()))
     else
