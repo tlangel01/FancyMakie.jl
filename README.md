@@ -7,7 +7,7 @@ FancyMakie is a small package i wrote as a template or config to plot with.
 Install via
 
 ```julia
-] add https://github.com/tlangel01/FancyMakie.jl.git
+] add https://github.com/otorias/FancyMakie.jl.git
 ```
 Then use with
 
