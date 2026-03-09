@@ -121,12 +121,16 @@ function set_custom_theme!(theme::Symbol=:plot; font::Symbol=:latex)
 end
 
 """
-    mm2pt(x,y)
+    mm2pt(x::Number...)
 
 Calculates the size a figure needs to result in desired mm.
+Output is a Tuple if multiple Arguments were given and a Float if only one.
 
 # Examples
 ```julia-repl
+julia> mm2pt(100)
+283.46456692913387
+
 julia> mm2pt(160,120)
 (453.5433070866142, 340.15748031496065)
 
@@ -136,7 +140,8 @@ julia> save("output.pdf", figure, pt_per_unit=1)
 # saves a vector graphic of width 16 cm, height 12 cm and fontsize 12
 ```
 """
-mm2pt(x,y) = (x,y) ./ 25.4 .* 72 # mm -> inches -> pt
+mm2pt(x::Number...) = x ./ 25.4 .* 72 # mm -> inches -> pt
+mm2pt(x::Number) = x / 25.4 * 72
 
 """
     comma(str::String)
