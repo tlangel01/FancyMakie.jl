@@ -7,13 +7,12 @@ FancyMakie is a small package i wrote as a template or config to plot with.
 Install via
 
 ```julia
-julia>]
-pkg> add https://github.com/tlangel01/FancyMakie.jl.git
+] add https://github.com/tlangel01/FancyMakie.jl.git
 ```
 Then use with
 
 ```julia
-julia> using FancyMakie
+using FancyMakie
 ```
 
 ## Getting Started
@@ -23,7 +22,7 @@ julia> using FancyMakie
 The predefined theme can be set with:
 
 ```julia
-julia> set_custom_theme!()
+set_custom_theme!()
 ```
 
 This function also takes two optional argument:
@@ -38,13 +37,12 @@ To create ready-to-publish figures, the size and fontsize should be normalized.
 For this the abovementioned theme defaults to a fontsize of 12 px with a size of 16 x 12 cm.
 To change the size of a figure you can set it via `mm2pt(width,height)`, e.g., to 14 x 14 cm with:
 ```julia
-julia> fig = Figure(size = mm2pt(140,140), fontsize=14)
+fig = Figure(size = mm2pt(140,140), fontsize=14)
 ```
 
 ### Other
 
 Other functionalities are not as important and can be found with
 ```julia
-julia>?
-help?> FancyMakie
+? FancyMakie
 ```
